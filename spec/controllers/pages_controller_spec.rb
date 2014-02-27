@@ -47,6 +47,18 @@ describe PagesController do
     end
   end
 
+  describe "GET 'help'" do
+    it "returns http success" do
+      get 'help'
+      expect(response).to be_success
+    end
+
+    it "should have the title 'Ruby on Rails Tutorial Sample App | Help'" do
+      visit '/pages/help'
+      expect(page).to have_title("#{@base_title} | Help")
+    end
+  end  
+
 
 end
 
