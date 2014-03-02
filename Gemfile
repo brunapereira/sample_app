@@ -27,6 +27,8 @@ gem 'turbolinks'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 1.2'
 
+gem 'protected_attributes'
+
 group :development, :test do
   gem 'rspec-rails', '2.13.1'
   gem 'annotate'
