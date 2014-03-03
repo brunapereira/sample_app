@@ -13,6 +13,4 @@ describe UsersController do
       expect(page).to have_title("Sign Up")
     end
 
-    
-
 end

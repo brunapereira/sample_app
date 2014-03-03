@@ -32,7 +32,6 @@ describe PagesController do
       expect(page).to have_title("#{@base_title} | Contact")
     end
 
-
   end
 
   describe "GET 'about'" do
