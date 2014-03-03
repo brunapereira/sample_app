@@ -106,6 +106,47 @@ describe User do
     it "should have an encrypted password attribute" do 
       expect(@user).to respond_to(:encrypted_password)
     end    
-  end  
 
+    it "should set the encrypted password attribute" do 
+      expect(@user.encrypted_password).to_not be_blank
+    end
+
+    it "should have a sault" do
+      expect(@user).to respond_to(:salt)
+    end
+
+
+    describe "has_password? method" do 
+      it "should exist" do 
+        expect(@user).to respond_to(:has_password?)
+      end
+
+      it "should return true if de passwords match" do 
+        expect(@user.has_password?(@attr[:password])).to be_true
+      end
+
+      it "should return false if the passwords don't match" do 
+        expect(@user.has_password?("invalid")).to be_false
+      end
+    end
+
+    describe "authenticate method" do 
+
+      it "should exist" do 
+        expect(User).to respond_to(:authenticate)
+      end
+
+      it "should return nil on email/password mismatch" do
+        expect(User.authenticate(@attr[:email], "wrongpass")).to be_nil
+      end
+
+      it "should return nil for an email address with no user" do 
+        expect(User.authenticate("bar@foo.com", @attr[:password])).to be_nil
+      end
+
+      it "should return the user on email/password match" do 
+        expect(User.authenticate(@attr[:email], @attr[:password])).to be == @user
+      end
+    end
+  end  
 end
