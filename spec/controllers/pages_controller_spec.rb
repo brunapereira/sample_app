@@ -10,7 +10,7 @@ describe PagesController do
 
   describe "GET 'home'" do
     it "should have the content 'Home'" do
-      get 'home'
+      visit '/'
       expect(response).to be_success
     end
     
@@ -23,7 +23,7 @@ describe PagesController do
 
   describe "GET 'contact'" do
     it "returns http success" do
-      get 'contact'
+      visit '/contact'
       expect(response).to be_success
     end
 
@@ -36,7 +36,7 @@ describe PagesController do
 
   describe "GET 'about'" do
     it "returns http success" do
-      get 'about'
+      visit '/about'
       expect(response).to be_success
     end
 
@@ -48,7 +48,7 @@ describe PagesController do
 
   describe "GET 'help'" do
     it "returns http success" do
-      get 'help'
+      visit '/help'
       expect(response).to be_success
     end
 

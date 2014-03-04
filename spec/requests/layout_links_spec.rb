@@ -38,6 +38,5 @@ describe "LayoutLinks" do
     expect(page).to have_selector("h1", text: "Home")
     click_link "Sign up now!"
     expect(page).to have_selector("h1", text: "Users#new")
-    expect(page).to have_selector("a[href='/']>img")
   end
 end
