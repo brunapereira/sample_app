@@ -19,11 +19,15 @@ describe UsersController do
      end
 
      it "should have the user's name" do 
-       expect(page).to have_selector('h1', text: @user.name)
+       expect(page).to have_selector 'h1', text: @user.name
      end
 
      it "should have a profile image" do 
-       expect(page).to have_selector('h1>img')
+       expect(page).to have_selector 'h1>img'
+     end
+
+     it "should have the right URL" do 
+      expect(page).to have_link user_path(@user), href: user_path(@user)
      end
    end
 
