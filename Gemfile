@@ -28,6 +28,7 @@ gem 'turbolinks'
 gem 'jbuilder', '~> 1.2'
 
 gem 'protected_attributes'
+gem 'gravatar_image_tag', '~> 1.2.0'
 
 group :development, :test do
   gem 'rspec-rails', '2.13.1'
