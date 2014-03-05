@@ -42,10 +42,5 @@ describe UsersController do
       visit '/users/new'
       expect(page).to have_title "Sign Up" 
     end
-
-    it "test" do 
-      visit '/users/new'
-      expect(page).to have_selector('h1', text: "Users#new")
-    end
   end
 end
