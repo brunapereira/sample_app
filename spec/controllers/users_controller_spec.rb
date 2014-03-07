@@ -34,7 +34,8 @@ describe UsersController do
   describe "GET 'new" do 
     
     it "returns http success" do
-      visit '/users/new'
+      #visit '/users/new'
+      get :new
       expect(response).to be_success
     end
 

@@ -25,7 +25,12 @@ describe "LayoutLinks" do
   it 'should have a sign up page at /user/new' do 
     get '/signup'
     expect(response).to be_success
-  end    
+  end  
+
+  it 'should have a sign up page at /user/new' do 
+    get '/signin'
+    expect(response).to be_success
+  end  
 
   it 'should have the right links on the layout' do 
     visit root_path
