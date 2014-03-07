@@ -16,4 +16,29 @@ describe SessionsController do
     end
   end
 
+  describe "POST 'create'" do 
+    
+    describe "failure" do 
+        
+      before(:each) do 
+        @attr = { email: "", password: "" }
+      end
+
+      it "should re-render the 'new' page" do 
+        post :create, session: @attr
+        expect(response).to render_template('new')
+      end
+
+      # it "should have the right title" do 
+      #   post :create, session: @attr
+      #   expect(response).to have_selector(:title, text: "Sign in")
+      # end
+
+      it "should have an error message" do 
+        post :create, session: @attr
+        expect(flash.now[:error]).to match /invalid/i
+      end
+    end
+  end
+
 end
