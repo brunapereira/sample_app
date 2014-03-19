@@ -42,4 +42,32 @@ describe "LayoutLinks" do
     click_link "Home"
     expect(page).to have_selector("h1", text: "Home")
   end
+
+  describe "when not signed in" do 
+    it "should have a signin link" do
+      visit root_path
+      expect(page).to have_selector("a[href='#{signin_path}']", text: "Sign in")
+    end
+  end
+
+  describe "when signed in" do 
+
+    before(:each) do 
+      @user = Factory(:user)
+      visit signin_path
+      fill_in :session_email, with: @user.email
+      fill_in :session_password, with: @user.password
+      click_button "Sign in"
+    end
+
+    it "should have a signout link" do 
+      visit root_path
+      expect(page).to have_selector("a[href='#{signout_path}']", text: "Sign out") 
+    end
+
+    it "should have a profile link" do
+      visit root_path
+      expect(page).to have_selector("a[href='#{user_path(@user)}']", :text=> "Profile")
+    end
+  end
 end

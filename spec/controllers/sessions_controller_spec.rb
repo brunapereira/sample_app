@@ -60,4 +60,15 @@ describe SessionsController do
     end
   end
 
+  describe "DELETE 'destroy'" do 
+    
+    it "should sign a user out" do 
+      user = Factory(:user)
+      test_sign_in(user)
+      get :destroy#, id: user.id
+      expect(controller).to_not be_signed_in
+      expect(response).to redirect_to(root_path)
+    end
+  end
+
 end
