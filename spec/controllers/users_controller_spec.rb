@@ -99,6 +99,79 @@ describe UsersController do
     end
   end
 
+  describe "GET 'edit'" do 
+
+    before(:each) do 
+      @user = Factory(:user) 
+      test_sign_in @user
+    end
+
+    it "should be successfull" do 
+      get :edit, id: @user
+      expect(response).to be_success
+    end
+
+    it "should have the right title" do 
+      id = @user.id
+      visit "/users/#{id}/edit"
+      expect(page).to have_title "Edit user" 
+    end
+
+    it "should have a link to change the Gravatar" do 
+      id = @user.id
+      visit "/users/#{id}/edit"
+      expect(page).to have_selector("a[href='http://gravatar.com/emails']", :text=> "Change")
+    end
+  end
+
+  describe "PUT 'update'" do 
+
+    before(:each) do 
+      @user = Factory(:user)
+      test_sign_in(@user)
+    end 
+
+    describe "failure" do
+
+      before(:each) do 
+        @attr = { name: "", email: "", password: "", password_confirmation: "" }
+      end 
+      
+      it "should render the 'edit' page" do 
+        put :update, id: @user, user: @attr
+        expect(response).to render_template "edit"
+      end
+
+      it "should have the right title" do 
+        id = @user.id
+        visit "/users/#{id}/edit"
+        expect(page).to have_title "Edit user"
+      end
+
+    end
+
+    describe "success" do 
+
+      before(:each) do 
+        @attr = { name: "Bruna", email: "example@example.com", password: "foobar", password_confirmation: "foobar" }
+      end 
+
+      it "should change the users attributes" do 
+        put :update, id: @user, user: @attr
+        user = assigns(:user)
+        @user.reload
+        expect(@user.name).to eq user.name
+        expect(@user.email).to eq user.email
+        expect(@user.encrypted_password).to eq user.encrypted_password
+      end
+
+      it "should have a flash message" do 
+        put :update, id: @user, user: @attr
+        expect(flash[:success]).to match /updated/i
+      end
+
+    end
+  end
 
 
 end

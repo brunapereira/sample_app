@@ -16,7 +16,7 @@ describe PagesController do
     
     it "should have the title 'Ruby on Rails Tutorial Sample App | Home'" do
       visit '/'
-      expect(page).to have_title("#{@base_title} | Home")
+      expect(page).to have_title "#{@base_title} | Home" 
     end
 
   end
@@ -29,7 +29,7 @@ describe PagesController do
 
     it "should have the title 'Ruby on Rails Tutorial Sample App | Contact'" do
       visit '/contact'
-      expect(page).to have_title("#{@base_title} | Contact")
+      expect(page).to have_title "#{@base_title} | Contact"
     end
 
   end
@@ -42,7 +42,7 @@ describe PagesController do
 
     it "should have the title 'Ruby on Rails Tutorial Sample App | About'" do
       visit '/about'
-      expect(page).to have_title("#{@base_title} | About")
+      expect(page).to have_title "#{@base_title} | About"
     end
   end
 
@@ -54,7 +54,7 @@ describe PagesController do
 
     it "should have the title 'Ruby on Rails Tutorial Sample App | Help'" do
       visit '/help'
-      expect(page).to have_title("#{@base_title} | Help")
+      expect(page).to have_title "#{@base_title} | Help"
     end
   end  
 

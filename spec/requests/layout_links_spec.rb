@@ -69,5 +69,10 @@ describe "LayoutLinks" do
       visit root_path
       expect(page).to have_selector("a[href='#{user_path(@user)}']", :text=> "Profile")
     end
+
+    it "should have a settings link" do 
+      visit root_path
+      expect(page).to have_selector("a[href='#{edit_user_path(@user)}']", :text=> "Settings")
+    end
   end
 end
