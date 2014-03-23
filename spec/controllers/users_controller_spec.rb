@@ -19,6 +19,10 @@ describe UsersController do
         @user = test_sign_in(Factory(:user))
         Factory(:user, email: "bruna@bruna.net")
         Factory(:user, email: "bruna@bruna.com")
+
+        30.times do 
+          Factory(:user, email: Factory.next(:email))
+        end
       end
 
       it "should be successful" do 
@@ -33,9 +37,17 @@ describe UsersController do
 
       # it "should have an element for each user" do 
       #   get :index
-      #   User.all.each do |user|
+      #   User.paginate(page: 1).each do |user|
       #     expect(page).to have_css("li", text: user.name)
       #   end
+      # end
+
+      # it "should paginate users" do 
+      #   get :index
+      #   expect(response).to have_selector('div.pagination')
+      #   expect(response).to have_selector('span.disabled', text: "Previous")
+      #   expect(response).to have_selector('a', href: "/users?page=2", text: "2")
+      #   expect(response).to have_selector('a', href: '/users?page=2', text: "Next")
       # end
     end
 

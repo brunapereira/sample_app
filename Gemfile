@@ -10,11 +10,13 @@ gem 'turbolinks'
 gem 'jbuilder', '~> 1.2'
 gem 'protected_attributes'
 gem 'gravatar_image_tag', '~> 1.2.0'
+gem 'will_paginate', '~> 3.0.5'
 
 group :development, :test do
   gem 'rspec-rails', '2.13.1'
   gem 'annotate'
   gem 'autotest-rails'
+  gem 'faker', '0.3.1'
 end
 
 group :test do
