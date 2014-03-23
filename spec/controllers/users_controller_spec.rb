@@ -3,6 +3,44 @@ require 'spec_helper'
 describe UsersController do
   render_views
 
+  describe "GET 'index'" do
+    
+    context "for non-signed-in users" do 
+      
+      it "should deny access" do 
+        get :index
+        expect(response).to redirect_to signin_path
+      end
+    end
+
+    context "for signed-in-users" do 
+
+      before :each do 
+        @user = test_sign_in(Factory(:user))
+        Factory(:user, email: "bruna@bruna.net")
+        Factory(:user, email: "bruna@bruna.com")
+      end
+
+      it "should be successful" do 
+        get :index
+        expect(response).to be_success
+      end
+
+      # it "should have the right title" do 
+      #   get :index
+      #   expect(response).to have_css('h1', text: "All users")
+      # end
+
+      # it "should have an element for each user" do 
+      #   get :index
+      #   User.all.each do |user|
+      #     expect(page).to have_css("li", text: user.name)
+      #   end
+      # end
+    end
+
+  end 
+
   describe "GET 'show'" do 
 
     before(:each) do 
@@ -11,23 +49,23 @@ describe UsersController do
     end
 
     it "should be successful" do 
-    expect(response).to be_success
+      expect(response).to be_success
     end
 
     it "should have the right title" do 
-    expect(page).to have_title @user.name
+      expect(page).to have_title @user.name
     end
 
     it "should have the user's name" do 
-    expect(page).to have_selector 'h1', text: @user.name
+      expect(page).to have_selector 'h1', text: @user.name
     end
 
     it "should have a profile image" do 
-    expect(page).to have_selector 'h1>img'
+     expect(page).to have_selector 'h1>img'
     end
 
     it "should have the right URL" do 
-    expect(page).to have_selector("td>a[href='#{user_path(@user)}']", :text=> user_path(@user))
+      expect(page).to have_selector("td>a[href='#{user_path(@user)}']", :text=> user_path(@user))
     end
   end
 

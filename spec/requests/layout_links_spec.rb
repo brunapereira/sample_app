@@ -74,5 +74,10 @@ describe "LayoutLinks" do
       visit root_path
       expect(page).to have_selector("a[href='#{edit_user_path(@user)}']", :text=> "Settings")
     end
+
+    it "should have a users link" do 
+      visit root_path
+      expect(page).to have_selector("a[href='#{users_path}']", :text=> "Users")
+    end
   end
 end
