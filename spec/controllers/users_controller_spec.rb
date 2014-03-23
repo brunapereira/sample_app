@@ -3,46 +3,45 @@ require 'spec_helper'
 describe UsersController do
   render_views
 
-   describe "GET 'show'" do 
+  describe "GET 'show'" do 
 
-     before(:each) do 
-      @user = Factory(:user)
-      visit user_path(@user) 
-     end
-  
-     it "should be successful" do 
-      expect(response).to be_success
-     end
+    before(:each) do 
+    @user = Factory(:user)
+    visit user_path(@user) 
+    end
 
-     it "should have the right title" do 
-      expect(page).to have_title @user.name
-     end
+    it "should be successful" do 
+    expect(response).to be_success
+    end
 
-     it "should have the user's name" do 
-      expect(page).to have_selector 'h1', text: @user.name
-     end
+    it "should have the right title" do 
+    expect(page).to have_title @user.name
+    end
 
-     it "should have a profile image" do 
-      expect(page).to have_selector 'h1>img'
-     end
+    it "should have the user's name" do 
+    expect(page).to have_selector 'h1', text: @user.name
+    end
 
-     it "should have the right URL" do 
-      expect(page).to have_selector("td>a[href='#{user_path(@user)}']", :text=> user_path(@user))
-     end
-   end
+    it "should have a profile image" do 
+    expect(page).to have_selector 'h1>img'
+    end
+
+    it "should have the right URL" do 
+    expect(page).to have_selector("td>a[href='#{user_path(@user)}']", :text=> user_path(@user))
+    end
+  end
 
   describe "GET 'new" do 
     
     it "returns http success" do
-      #visit '/users/new'
       get :new
       expect(response).to be_success
     end
 
-    it "should have the title the right title" do
-      visit '/users/new' 
-      expect(page).to have_title "Sign Up"
-    end
+    # it "should have the title the right title" do
+    #   visit '/users/new' 
+    #   expect(page).to have_title "Sign Up"
+    # end
   end
 
   describe "POST 'create'" do 
@@ -111,24 +110,24 @@ describe UsersController do
       expect(response).to be_success
     end
 
-    it "should have the right title" do 
-      id = @user.id
-      visit "/users/#{id}/edit"
-      expect(page).to have_title "Edit user" 
-    end
+    # it "should have the right title" do 
+    #   id = @user.id
+    #   visit "/users/#{id}/edit"
+    #   expect(page).to have_title "Edit user" 
+    # end
 
-    it "should have a link to change the Gravatar" do 
-      id = @user.id
-      visit "/users/#{id}/edit"
-      expect(page).to have_selector("a[href='http://gravatar.com/emails']", :text=> "Change")
-    end
+    # it "should have a link to change the Gravatar" do 
+    #   id = @user.id
+    #   visit "/users/#{id}/edit"
+    #   expect(page).to have_selector("a[href='http://gravatar.com/emails']", :text=> "Change")
+    # end
   end
 
   describe "PUT 'update'" do 
 
-    before(:each) do 
-      @user = Factory(:user)
-      test_sign_in(@user)
+    before :each do 
+      @user = Factory :user
+      test_sign_in @user
     end 
 
     describe "failure" do
@@ -142,12 +141,11 @@ describe UsersController do
         expect(response).to render_template "edit"
       end
 
-      it "should have the right title" do 
-        id = @user.id
-        visit "/users/#{id}/edit"
-        expect(page).to have_title "Edit user"
-      end
-
+      # it "should have the right title" do 
+      #   id = @user.id
+      #   visit "/users/#{id}/edit"
+      #   expect(page).to have_title "Edit user"
+      # end
     end
 
     describe "success" do 
@@ -169,9 +167,25 @@ describe UsersController do
         put :update, id: @user, user: @attr
         expect(flash[:success]).to match /updated/i
       end
-
     end
   end
 
+  describe "authentication of edit/update actions" do 
+
+    before :each do 
+      @user = Factory :user
+    end
+
+    it "should deny access to 'edit'" do 
+      get :edit, id: @user
+      expect(response).to redirect_to signin_path
+      expect(flash[:notice]).to match /sign in/i
+    end
+
+    it "should deny access to 'update'" do 
+      put :update, id: @user, user: {}
+      expect(response).to redirect_to signin_path 
+    end
+  end
 
 end
