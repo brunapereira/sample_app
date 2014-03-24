@@ -27,4 +27,17 @@ describe Micropost do
     end
   end
 
+  describe "validations" do 
+    it "should have a user id" do 
+      expect(Micropost.new(@attr)).to_not be_valid
+    end
+
+    it "should require nonblank content" do 
+      expect(@user.microposts.build(content: "    ")).to_not be_valid
+    end
+
+    it "should reject long content" do 
+      expect(@user.microposts.build(content: "a" * 141)).to_not be_valid
+    end
+  end
 end
