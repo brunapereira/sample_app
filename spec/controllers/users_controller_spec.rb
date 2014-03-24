@@ -70,31 +70,56 @@ describe UsersController do
 
     before(:each) do 
       @user = Factory(:user)
-      get :show, id: @user
     end
 
     it "should be successful" do 
+      get :show, id: @user
       expect(response).to be_success
     end
 
     it "should find the right user" do
+      get :show, id: @user
       expect(assigns(:user)).to eql @user
     end
 
     it "should have the right title" do 
+      get :show, id: @user
       expect(response).to have_selector('title', content: @user.name)
     end
 
     it "should have the user's name" do 
+      get :show, id: @user
       expect(response).to have_selector('h1', content: @user.name)
     end
 
     it "should have a profile image" do 
-     expect(response).to have_selector('h1>img', class: "gravatar")
+      get :show, id: @user
+      expect(response).to have_selector('h1>img', class: "gravatar")
     end
 
     it "should have the right URL" do 
+      get :show, id: @user
       expect(response).to have_selector("td>a", href: user_path(@user), content: user_path(@user))
+    end
+
+    it "should show the user's microposts" do 
+      mp1 = Factory :micropost, user: @user, content: "Foobar"
+      mp2 = Factory :micropost, user: @user, content: "Bruna"
+      get :show, id: @user
+      expect(response).to have_selector('span.content', content: mp1.content)
+      expect(response).to have_selector('span.content', content: mp2.content)
+    end
+
+    it "should paginate microposts" do
+      35.times { Factory(:micropost, user: @user, content: "foo") }
+      get :show, id: @user
+      expect(response).to have_selector('div.pagination')
+    end
+
+    it "should display the micropost count" do 
+      10.times { Factory(:micropost, user: @user, content: "foo") }
+      get :show, id: @user
+      expect(response).to have_selector 'td.sidebar', content: @user.microposts.count.to_s 
     end
   end
 
