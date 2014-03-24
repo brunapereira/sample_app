@@ -11,8 +11,8 @@ describe SessionsController do
     end
 
     it "should have the title the right title" do
-      visit '/signin'
-      expect(page).to have_title "Sign in"
+      get :new
+      expect(response).to have_selector('title', content: "Sign in")
     end
   end
 

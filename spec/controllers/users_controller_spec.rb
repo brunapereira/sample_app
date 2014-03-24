@@ -30,54 +30,71 @@ describe UsersController do
         expect(response).to be_success
       end
 
-      # it "should have the right title" do 
-      #   get :index
-      #   expect(response).to have_css('h1', text: "All users")
-      # end
+      it "should have the right title" do 
+        get :index
+        expect(response).to have_selector('title', content: "All users")
+      end
 
-      # it "should have an element for each user" do 
-      #   get :index
-      #   User.paginate(page: 1).each do |user|
-      #     expect(page).to have_css("li", text: user.name)
-      #   end
-      # end
+      it "should have an element for each user" do 
+        get :index
+        User.paginate(page: 1).each do |user|
+          expect(response).to have_selector("li", content: user.name)
+        end
+      end
 
-      # it "should paginate users" do 
-      #   get :index
-      #   expect(response).to have_selector('div.pagination')
-      #   expect(response).to have_selector('span.disabled', text: "Previous")
-      #   expect(response).to have_selector('a', href: "/users?page=2", text: "2")
-      #   expect(response).to have_selector('a', href: '/users?page=2', text: "Next")
-      # end
+      it "should paginate users" do 
+        get :index
+        expect(response).to have_selector('div.pagination')
+        expect(response).to have_selector('span.disabled', content: "Previous")
+        expect(response).to have_selector('a', href: "/users?page=2", content: "2")
+        expect(response).to have_selector('a', href: '/users?page=2', content: "Next")
+      end
+    
+
+      it "should have a delete link for admins" do 
+        @user.toggle!(:admin)
+        other_user = User.all.second
+        get :index
+        expect(response).to have_selector('a', href: user_path(other_user), content: "delete")
+      end
+
+      it "should not have a delete link for admins" do 
+        other_user = User.all.second
+        get :index
+        expect(response).to_not have_selector('a', href: user_path(other_user), content: "delete")
+      end
     end
-
   end 
 
   describe "GET 'show'" do 
 
     before(:each) do 
-    @user = Factory(:user)
-    visit user_path(@user) 
+      @user = Factory(:user)
+      get :show, id: @user
     end
 
     it "should be successful" do 
       expect(response).to be_success
     end
 
+    it "should find the right user" do
+      expect(assigns(:user)).to eql @user
+    end
+
     it "should have the right title" do 
-      expect(page).to have_title @user.name
+      expect(response).to have_selector('title', content: @user.name)
     end
 
     it "should have the user's name" do 
-      expect(page).to have_selector 'h1', text: @user.name
+      expect(response).to have_selector('h1', content: @user.name)
     end
 
     it "should have a profile image" do 
-     expect(page).to have_selector 'h1>img'
+     expect(response).to have_selector('h1>img', class: "gravatar")
     end
 
     it "should have the right URL" do 
-      expect(page).to have_selector("td>a[href='#{user_path(@user)}']", :text=> user_path(@user))
+      expect(response).to have_selector("td>a", href: user_path(@user), content: user_path(@user))
     end
   end
 
@@ -88,10 +105,10 @@ describe UsersController do
       expect(response).to be_success
     end
 
-    # it "should have the title the right title" do
-    #   visit '/users/new' 
-    #   expect(page).to have_title "Sign Up"
-    # end
+    it "should have the title the right title" do
+      get :new
+      expect(response).to have_selector("title", content: "Sign Up")
+    end
   end
 
   describe "POST 'create'" do 
@@ -102,10 +119,10 @@ describe UsersController do
         @attr = { name: "", email: "", password: "", password_confirmation: "" }
       end
 
-      # it "should have the right title" do 
-      #   post :create, user: @attr
-      #   expect(page).to have_title "Sign Up"
-      # end
+      it "should have the right title" do 
+        post :create, user: @attr
+        expect(response).to have_selector("title", content: "Sign Up")
+      end
 
       it "should render the 'new' page" do
         post :create, user: @attr
@@ -160,17 +177,15 @@ describe UsersController do
       expect(response).to be_success
     end
 
-    # it "should have the right title" do 
-    #   id = @user.id
-    #   visit "/users/#{id}/edit"
-    #   expect(page).to have_title "Edit user" 
-    # end
+    it "should have the right title" do 
+      get :edit, id: @user
+      expect(response).to have_selector("title", content: "Edit user") 
+    end
 
-    # it "should have a link to change the Gravatar" do 
-    #   id = @user.id
-    #   visit "/users/#{id}/edit"
-    #   expect(page).to have_selector("a[href='http://gravatar.com/emails']", :text=> "Change")
-    # end
+    it "should have a link to change the Gravatar" do 
+      get :edit, id: @user
+      expect(response).to have_selector("a", href: 'http://gravatar.com/emails', content: "Change")
+    end
   end
 
   describe "PUT 'update'" do 
@@ -191,11 +206,10 @@ describe UsersController do
         expect(response).to render_template "edit"
       end
 
-      # it "should have the right title" do 
-      #   id = @user.id
-      #   visit "/users/#{id}/edit"
-      #   expect(page).to have_title "Edit user"
-      # end
+      it "should have the right title" do 
+        put :update, id: @user, user: @attr
+        expect(response).to have_selector("title", content: "Edit user")
+      end
     end
 
     describe "success" do 
@@ -257,7 +271,54 @@ describe UsersController do
         expect(response).to redirect_to(root_path)
       end
     end
+  end
 
+  describe "DELETE 'destroy'" do 
+
+    before(:each) do 
+      @user = Factory(:user)
+    end
+
+    context "as a non-signed-in user" do 
+      it "should deny access" do 
+        delete :destroy, id: @user
+        expect(response).to redirect_to signin_path
+      end
+    end
+
+    context "as non-admin user" do 
+      it "should protect the action" do 
+        test_sign_in(@user)
+        delete :destroy, id: @user
+        expect(response).to redirect_to root_path
+      end
+    end
+
+    context "as an admin user" do 
+
+      before(:each) do
+        @admin = Factory(:user, email: "admin@example.com", admin: true)
+        test_sign_in(@admin)
+      end 
+
+      it "should destroy the user" do 
+        lambda do
+          delete :destroy, id: @user
+        end.should change(User, :count).by(-1)
+      end
+
+      it "should redirect to the users page" do 
+        delete :destroy, id: @user
+        expect(flash[:success]).to match /destroyed/i
+        expect(response).to redirect_to users_path
+      end
+
+      it "should not be able to destroy itself" do 
+        lambda do 
+          delete :destroy, id: @admin
+        end.should_not change(User, :count)
+      end
+    end
   end
 
 end
