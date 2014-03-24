@@ -135,7 +135,7 @@ describe User do
     describe "authenticate method" do 
 
       it "should exist" do 
-        expect(User).to respond_to(:authenticate)
+        expect(User).to respond_to :authenticate 
       end
 
       it "should return nil on email/password mismatch" do
@@ -155,11 +155,11 @@ describe User do
   describe "admin attribute" do 
 
     before(:each) do 
-      @user = User.create!(@attr)
+      @user = User.create! @attr
     end
   
     it "should respond to admin" do
-      expect(@user).to respond_to(:admin)
+      expect(@user).to respond_to :admin 
     end
 
     it "should not be an admin by default" do
@@ -167,8 +167,34 @@ describe User do
     end
 
     it "should be convertible to an admin" do
-      @user.toggle!(:admin)
+      @user.toggle! :admin
       expect(@user).to be_admin
+    end
+  end
+
+  describe "micropost associations" do 
+
+    before :each do 
+      @user = User.create(@attr)
+      @mp1 = Factory(:micropost, user: @user, created_at: 1.day.ago)
+      @mp2 = Factory(:micropost, user: @user, created_at: 1.hour.ago)
+    end
+
+    it "should have a microposts attribute" do 
+      expect(@user).to respond_to :microposts
+    end
+
+    it "should have the right microposts in the right order" do 
+      expect(@user.microposts).to eq [@mp2, @mp1]
+    end
+
+    it "should destroy associated microposts" do 
+      @user.destroy
+      [@mp1, @mp2].each do |micropost|
+        lambda do 
+          Micropost.find(micropost)
+        end.should raise_error(ActiveRecord::RecordNotFound)
+      end
     end
   end
 end

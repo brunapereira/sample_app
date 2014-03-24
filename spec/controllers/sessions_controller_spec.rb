@@ -29,10 +29,10 @@ describe SessionsController do
         expect(response).to render_template('new')
       end
 
-      # it "should have the right title" do 
-      #   post :create, session: @attr
-      #   expect(response).to have_selector(:title, text: "Sign in")
-      # end
+      it "should have the right title" do 
+        post :create, session: @attr
+        expect(response).to have_selector(:title, content: "Sign in")
+      end
 
       it "should have an error message" do 
         post :create, session: @attr

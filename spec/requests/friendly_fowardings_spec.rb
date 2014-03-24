@@ -7,12 +7,12 @@ describe "FriendlyFowardings" do
     fill_in :session_email, with: user.email
     fill_in :session_password, with: user.password
     click_button 'Sign in'
-    #expect(response).to render_template "users/edit" not working so I can't test :(
+    #expect(response).to render_template('users/edit') # not working so I can't test :(
     visit signout_path
     visit signin_path
     fill_in :session_email, with: user.email
     fill_in :session_password, with: user.password
     click_button 'Sign in'
-    #expect(response).to render_template "users/show" not working so I can't test :(
+    #expect(response).to render_template('users/show') #not working so I can't test :(
   end
 end
