@@ -34,13 +34,13 @@ describe "LayoutLinks" do
 
   it 'should have the right links on the layout' do 
     visit root_path
-    expect(page).to have_selector("h1", content: "Home")
+    expect(page).to have_selector("h1", content: "Sample App")
     click_link "About"
     expect(page).to have_selector("h1", content: "About")
     click_link "Contact"
     expect(page).to have_selector("h1", content: "Contact")
     click_link "Home"
-    expect(page).to have_selector("h1", content: "Home")
+    expect(page).to have_selector("h1", content: "Sample App")
   end
 
   describe "when not signed in" do 
