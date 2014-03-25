@@ -22,7 +22,7 @@ describe "LayoutLinks" do
     expect(response).to have_selector('title', content: "Help")
   end    
 
-  it 'should have a sign up page at /user/new' do 
+  it "should have a sign up page at 'Sign Up'" do 
     get '/signup'
     expect(response).to have_selector('title', content: "Sign Up")
   end  
